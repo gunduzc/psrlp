@@ -18,7 +18,7 @@ A type-safe, layered architecture learning platform using the FSRS (Free Spaced 
 - **Import/Export**: JSON-based curriculum sharing
 
 ### Security
-- **Sandboxed Execution**: Card code runs in isolated V8 instances
+- **Sandboxed Execution**: Card code runs in isolated QuickJS instances
 - **Server-Side Validation**: Correct answers never leave the server
 - **Role-Based Access**: Admin, Educator, and Student roles
 - **2FA Support**: TOTP-based two-factor authentication
