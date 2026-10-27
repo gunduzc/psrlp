@@ -12,6 +12,14 @@ import prisma from "./prisma";
 import { Role } from "./types";
 import type { Adapter } from "next-auth/adapters";
 
+export function getTwoFactorEncryptionKey(): string {
+  const key = process.env.TWO_FACTOR_SECRET_KEY;
+  if (!key && process.env.NODE_ENV === "production") {
+    throw new Error("TWO_FACTOR_SECRET_KEY must be set in production");
+  }
+  return key || "dev-only-secret-key";
+}
+
 class TwoFactorRequiredError extends CredentialsSignin {
   code = "two_factor_required";
 }
@@ -96,8 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new TwoFactorRequiredError();
           }
 
-          const encryptionKey = process.env.TWO_FACTOR_SECRET_KEY || "dev-only-secret-key";
-          const bytes = CryptoJS.AES.decrypt(user.twoFactorSecret, encryptionKey);
+          const bytes = CryptoJS.AES.decrypt(user.twoFactorSecret, getTwoFactorEncryptionKey());
           const secret = bytes.toString(CryptoJS.enc.Utf8);
 
           const totp = new OTPAuth.TOTP({
